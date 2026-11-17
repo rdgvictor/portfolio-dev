@@ -181,7 +181,7 @@ footer { padding: 96px 48px 36px; color: var(--grey); font-size: 14px; }
 .pnav a:hover { color: var(--ink); }
 .pnav a:last-child { justify-self: end; }
 .prod { --alto: max(520px, calc(100svh - var(--head) - 48px - 40px)); grid-template-columns: 1fr 1fr; min-height: 0; gap: 56px; align-items: stretch; }
-.prod .ph { height: auto; min-height: var(--alto); width: 100%; max-height: none; aspect-ratio: auto; }
+.prod .ph { height: var(--alto); width: 100%; max-height: none; aspect-ratio: auto; align-self: start; position: sticky; top: calc(var(--head) + 16px); }
 .prod .txt { position: static; padding-top: 0; gap: 16px; display: flex; flex-direction: column; min-height: var(--alto); }
 .prod .txt .info { margin: auto 0 0; }
 .prod .txt .lead { margin-bottom: 8px; }
