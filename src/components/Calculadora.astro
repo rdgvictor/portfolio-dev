@@ -1,0 +1,46 @@
+---
+// Demonstração de uma regra do Mira: em qual fatura cai cada parcela.
+---
+<section class="calc" aria-labelledby="calc-t">
+  <div>
+    <h2 id="calc-t">Em qual fatura cai cada parcela?</h2>
+    <p>Uma das regras do Mira, funcionando aqui: compras feitas a partir do dia de fechamento entram na fatura seguinte, e os centavos que sobram da divisão vão para a primeira parcela.</p>
+    <form class="fields" id="calc" novalidate>
+      <label for="valor">valor da compra (R$)<input id="valor" inputmode="decimal" value="1.249,90" /></label>
+      <label for="parcelas">parcelas<input id="parcelas" type="number" min="1" max="24" value="5" /></label>
+      <label for="data">data da compra<input id="data" type="date" value="2026-11-26" /></label>
+      <label for="fecha">dia de fechamento<input id="fecha" type="number" min="1" max="28" value="25" /></label>
+    </form>
+  </div>
+  <div id="out" aria-live="polite"></div>
+</section>
+<script is:inline>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var meses = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+  var brl = function (c) { return (c / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); };
+  function calcular() {
+    var out = $("#out");
+    var raw = String($("#valor").value).replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", ".");
+    var total = Math.round(Number(raw) * 100);
+    var n = Math.max(1, Math.min(24, parseInt($("#parcelas").value, 10) || 1));
+    var fecha = Math.max(1, Math.min(28, parseInt($("#fecha").value, 10) || 1));
+    var d = $("#data").value ? new Date($("#data").value + "T12:00:00") : null;
+    if (!isFinite(total) || total <= 0 || !d || isNaN(d)) { out.innerHTML = '<p class="note">Preencha um valor maior que zero e uma data válida.</p>'; return; }
+    var base = Math.floor(total / n), resto = total - base * n;
+    var mes = d.getMonth(), ano = d.getFullYear(), prox = d.getDate() >= fecha;
+    if (prox) { mes++; if (mes > 11) { mes = 0; ano++; } }
+    var rows = "";
+    for (var i = 0; i < n; i++) {
+      var m = (mes + i) % 12, a = ano + Math.floor((mes + i) / 12);
+      rows += "<tr><td>" + String(i + 1).padStart(2, "0") + "/" + String(n).padStart(2, "0") + "</td><td>fatura de " + meses[m] + " " + a + "</td><td>" + brl(base + (i === 0 ? resto : 0)) + "</td></tr>";
+    }
+    out.innerHTML = '<div class="wrapt"><table><thead><tr><th>parcela</th><th>fatura</th><th>valor</th></tr></thead><tbody>' + rows + '</tbody></table></div><p class="note">' +
+      (prox ? "Comprado no dia " + d.getDate() + ", a partir do fechamento do dia " + fecha + ": começa na fatura seguinte." : "Comprado antes do fechamento do dia " + fecha + ": entra na fatura do mês.") + " Total: " + brl(total) + ".</p>";
+  }
+  var f = $("#calc");
+  f.addEventListener("input", calcular);
+  f.addEventListener("submit", function (e) { e.preventDefault(); });
+  calcular();
+})();
+</script>

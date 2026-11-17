@@ -1,0 +1,9 @@
+---
+// Espaço de imagem: mostra a foto quando houver; senão, um rótulo para lembrar o que vai ali.
+interface Props { src?: string; rotulo: string; class?: string; style?: string; }
+const { src, rotulo, class: cls = '', style } = Astro.props;
+---
+<div class={`ph ${cls}`} style={style}>
+  {src ? <img src={src} alt={rotulo} loading="lazy" /> : <span class="lbl">[{rotulo}]</span>}
+  <slot />
+</div>

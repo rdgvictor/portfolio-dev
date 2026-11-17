@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import Imagem from '../components/Imagem.astro';
+import sobre from '../data/sobre.json';
+---
+<Base titulo="Sobre">
+  <div class="about">
+    <Imagem src={sobre.retrato} rotulo="retrato" />
+    <div>
+      <h1>{sobre.titulo}</h1>
+      {sobre.paragrafos.map((t) => <p>{t}</p>)}
+      <div class="block">
+        <h2>Stack</h2>
+        <div class="rows">{sobre.stack.map((s) => <div class={s.destaque ? 'now' : undefined}><span>{s.nome}</span><span>{s.detalhe}</span></div>)}</div>
+      </div>
+      <div class="block">
+        <h2>Trajetória</h2>
+        <div class="rows">{sobre.trajetoria.map((s) => <div class={s.destaque ? 'now' : undefined}><span>{s.nome}</span><span>{s.periodo}</span></div>)}</div>
+      </div>
+    </div>
+  </div>
+</Base>

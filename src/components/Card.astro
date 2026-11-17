@@ -1,0 +1,13 @@
+---
+import Imagem from './Imagem.astro';
+import { statusOk } from '../lib';
+interface Props { p: { slug: string; data: any } }
+const { p } = Astro.props;
+const d = p.data;
+---
+<a class="card" href={`/projetos/${p.slug}/`}>
+  <Imagem src={d.imagemLista || d.imagem} rotulo={`imagem · ${d.nome}`} />
+  <h3>{d.nome}</h3>
+  <p>{d.tipo}</p>
+  <span class={statusOk(d.status) ? 'st ok' : 'st'}>{d.status}</span>
+</a>

@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Imagem from '../components/Imagem.astro';
+import Card from '../components/Card.astro';
+import home from '../data/home.json';
+import { getCollection } from 'astro:content';
+import { negrito } from '../lib';
+const projetos = (await getCollection('projetos')).sort((a, b) => a.data.ordem - b.data.ordem);
+const destaque = projetos.slice(0, Number(home.quantidadeProjetos) || 3);
+---
+<Base>
+  <a class="hero-link" href={home.linkImagem || '/projetos/'} aria-label="Abrir o projeto em destaque">
+    <Imagem class="hero" src={home.imagem} rotulo="captura de tela grande · projeto em destaque">
+      {home.mostrarEtiqueta && home.textoEtiqueta && <span class="tag">{home.textoEtiqueta}</span>}
+    </Imagem>
+  </a>
+  <div class="intro">
+    <h1>{home.titulo}</h1>
+    <p set:html={negrito(home.texto)} />
+  </div>
+  <div class="section-h"><h2>Projetos</h2><a href="/projetos/" class="muted">ver todos</a></div>
+  <div class="grid">{destaque.map((p) => <Card p={p} />)}</div>
+</Base>

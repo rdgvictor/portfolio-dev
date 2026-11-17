@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+import site from '../data/site.json';
+
+interface Props { titulo?: string; descricao?: string; }
+const { titulo, descricao = site.descricao } = Astro.props;
+const nome = `${site.titulo} · ${site.sufixo}`;
+const pageTitle = titulo ? `${titulo} | ${nome}` : nome;
+const atual = Astro.url.pathname;
+const ativo = (p: string) => (atual.startsWith(p) ? 'page' : undefined);
+const tema = site.tema === 'branco' ? 'branco' : 'azul';
+---
+<!doctype html>
+<html lang="pt-BR" data-tema={tema}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={descricao} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{pageTitle}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <noscript><style>#tr{display:none !important}</style></noscript>
+  </head>
+  <body>
+    <div id="tr" class="in" aria-hidden="true"><i></i></div>
+    <header>
+      <a class="logo" href="/" aria-label={`${nome}, início`}><span>{site.titulo}</span><span class="dot" aria-hidden="true"></span><span>{site.sufixo}</span></a>
+      <button class="burger" id="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span></button>
+      <nav class="main" id="menu" aria-label="Páginas">
+        <a href="/projetos/" aria-current={ativo('/projetos')}>Projetos</a>
+        <a href="/sobre/" aria-current={ativo('/sobre')}>Sobre</a>
+        <a href="/contato/" aria-current={ativo('/contato')}>Contato</a>
+      </nav>
+    </header>
+    <main><slot /></main>
+    <footer>{site.copyright}</footer>
+
+    <script is:inline>
+      (function () {
+        var tr = document.getElementById('tr');
+        var reduz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // entrada: a tela azul/branca some com fade
+        setTimeout(function () { tr.className = ''; }, reduz ? 0 : 520);
+        window.addEventListener('pageshow', function (e) { if (e.persisted) tr.className = ''; });
+        // saída: a linha encolhe até o centro antes de trocar de página
+        document.addEventListener('click', function (e) {
+          var a = e.target.closest && e.target.closest('a');
+          if (!a || reduz || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
+          var url = new URL(a.href, location.href);
+          if (url.origin !== location.origin || url.pathname === location.pathname) return;
+          e.preventDefault();
+          tr.className = 'go';
+          setTimeout(function () { location.href = url.href; }, 720);
+        });
+        var btn = document.getElementById('burger'), menu = document.getElementById('menu');
+        btn.addEventListener('click', function () {
+          var aberto = menu.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(aberto));
+        });
+      })();
+    </script>
+  </body>
+</html>

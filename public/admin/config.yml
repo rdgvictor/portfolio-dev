@@ -1,0 +1,117 @@
+backend:
+  name: github
+  repo: rdgvictor/portfolio-dev
+  branch: main
+
+locale: pt
+
+# Mesmo fluxo do site do estúdio: ao salvar, vira rascunho com prévia no Netlify antes de publicar.
+publish_mode: editorial_workflow
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: projetos
+    label: Projetos
+    label_singular: Projeto
+    folder: src/content/projetos
+    create: true
+    extension: md
+    slug: "{{slug}}"
+    summary: "{{ordem}} · {{nome}}"
+    sortable_fields: [ordem, nome]
+    fields:
+      - { label: Nome, name: nome, widget: string }
+      - { label: "Tipo (aparece abaixo do nome na lista)", name: tipo, widget: string }
+      - label: Status
+        name: status
+        widget: select
+        options: ["em uso", "no ar", "uso interno", "em desenvolvimento", "em estudo"]
+      - { label: "Origem (linha pequena acima do título, ex.: projeto pessoal)", name: origem, widget: string }
+      - { label: Imagem na lista de projetos, name: imagemLista, widget: image, required: false }
+      - { label: Imagem principal da página do projeto, name: imagem, widget: image, required: false }
+      - { label: Texto, name: body, widget: markdown, buttons: [bold, italic, link], editor_components: [] }
+      - label: Ficha técnica
+        name: ficha
+        widget: list
+        required: false
+        summary: "{{fields.rotulo}}: {{fields.valor}}"
+        fields:
+          - { label: Rótulo, name: rotulo, widget: string }
+          - { label: Valor, name: valor, widget: string }
+      - label: "Informações adicionais (imagens com legenda)"
+        name: galeria
+        widget: list
+        required: false
+        summary: "{{fields.legenda}}"
+        fields:
+          - { label: Imagem, name: imagem, widget: image, required: false }
+          - { label: Legenda, name: legenda, widget: string, required: false }
+      - { label: "Link externo (opcional)", name: link, widget: string, required: false }
+      - { label: "Texto do botão do link", name: textoLink, widget: string, required: false }
+      - { label: "Mostrar a calculadora de parcelas (só no Mira)", name: calculadora, widget: boolean, default: false }
+      - { label: "Ordem (1 aparece primeiro)", name: ordem, widget: number, value_type: int, default: 99 }
+
+  - name: paginas
+    label: Configurações e páginas
+    files:
+      - name: site
+        label: Configurações do site
+        file: src/data/site.json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: "Texto depois da bolinha", name: sufixo, widget: string }
+          - label: Tema (cor de fundo)
+            name: tema
+            widget: select
+            options:
+              - { label: "Azul cobalto", value: azul }
+              - { label: "Branco", value: branco }
+          - { label: Descrição para buscadores, name: descricao, widget: text }
+          - { label: E-mail, name: email, widget: string }
+          - { label: LinkedIn, name: linkedin, widget: string }
+          - { label: GitHub, name: github, widget: string }
+          - { label: Rodapé, name: copyright, widget: string }
+      - name: home
+        label: Início
+        file: src/data/home.json
+        fields:
+          - { label: Imagem grande, name: imagem, widget: image, required: false }
+          - { label: "Link da imagem (ex.: /projetos/vr-hub/)", name: linkImagem, widget: string, required: false }
+          - { label: Mostrar etiqueta vertical, name: mostrarEtiqueta, widget: boolean, default: true }
+          - { label: Texto da etiqueta, name: textoEtiqueta, widget: string, required: false }
+          - { label: Título, name: titulo, widget: text }
+          - { label: "Texto (use **palavras** para negrito)", name: texto, widget: text }
+          - label: Quantos projetos aparecem no início
+            name: quantidadeProjetos
+            widget: select
+            options: ["3", "6"]
+      - name: sobre
+        label: Sobre
+        file: src/data/sobre.json
+        fields:
+          - { label: Retrato, name: retrato, widget: image, required: false }
+          - { label: Título, name: titulo, widget: string }
+          - { label: Parágrafos, name: paragrafos, widget: list, field: { label: Parágrafo, name: paragrafo, widget: text } }
+          - label: Stack
+            name: stack
+            widget: list
+            summary: "{{fields.nome}}"
+            fields:
+              - { label: Nome, name: nome, widget: string }
+              - { label: Detalhe, name: detalhe, widget: string }
+              - { label: Destacar, name: destaque, widget: boolean, default: false }
+          - label: Trajetória
+            name: trajetoria
+            widget: list
+            summary: "{{fields.periodo}} · {{fields.nome}}"
+            fields:
+              - { label: Nome, name: nome, widget: string }
+              - { label: Período, name: periodo, widget: string }
+              - { label: Destacar, name: destaque, widget: boolean, default: false }
+      - name: contato
+        label: Contato
+        file: src/data/contato.json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: Texto, name: texto, widget: text }
