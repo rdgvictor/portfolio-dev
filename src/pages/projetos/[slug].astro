@@ -6,19 +6,24 @@ import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
   const todos = (await getCollection('projetos')).sort((a, b) => a.data.ordem - b.data.ordem);
-  return todos.map((p, i) => ({ params: { slug: p.slug }, props: { p, proximo: todos[(i + 1) % todos.length] } }));
+  return todos.map((p, i) => ({ params: { slug: p.slug }, props: {
+    p, anterior: todos[(i - 1 + todos.length) % todos.length], proximo: todos[(i + 1) % todos.length] } }));
 }
-const { p, proximo } = Astro.props;
+const { p, anterior, proximo } = Astro.props;
 const d = p.data;
 const { Content } = await p.render();
 ---
 <Base titulo={d.nome} descricao={`${d.nome} · ${d.tipo}`}>
+  <nav class="pnav" aria-label="Navegar entre projetos">
+    <a href={`/projetos/${anterior.slug}/`}><span aria-hidden="true">←</span> {anterior.data.nome}</a>
+    <a class="todos" href="/projetos/">todos os projetos</a>
+    <a href={`/projetos/${proximo.slug}/`}>{proximo.data.nome} <span aria-hidden="true">→</span></a>
+  </nav>
   <div class="prod">
     <Imagem src={d.imagem} rotulo={`captura de tela principal · ${d.nome}`} />
     <div class="txt">
-      <a class="back" href="/projetos/">← todos os projetos</a>
-      <span class="eyebrow">{d.origem}</span>
       <h1>{d.nome}</h1>
+      <span class="eyebrow">{d.origem}</span>
       <div class="lead"><Content /></div>
       <dl class="info">
         {d.ficha.map((f) => <div><dt>{f.rotulo}</dt><dd>{f.valor}</dd></div>)}
@@ -41,5 +46,4 @@ const { Content } = await p.render();
       </div>
     </div>
   )}
-  <p class="next"><a class="back" href={`/projetos/${proximo.slug}/`}>próximo projeto: {proximo.data.nome} →</a></p>
 </Base>

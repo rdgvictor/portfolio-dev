@@ -175,3 +175,26 @@ footer { padding: 96px 48px 36px; color: var(--grey); font-size: 14px; }
 .lead p { margin: 0 0 12px; font-size: 19px; color: var(--ink2); max-width: 30em; }
 .next { padding: 40px 48px 0; margin: 0; }
 @media (max-width: 900px) { .hero-link { margin: 0 20px; } .next { padding-left: 20px; padding-right: 20px; } }
+
+/* página de projeto: navegação, primeira dobra numa tela só, galeria com imagens iguais */
+.pnav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; height: 48px; padding: 0 48px; font-size: 15px; color: var(--grey); }
+.pnav a:hover { color: var(--ink); }
+.pnav a:last-child { justify-self: end; }
+.pnav .todos { justify-self: center; }
+.prod { --alto: calc(100svh - var(--head) - 48px - 40px); grid-template-columns: auto minmax(320px, 1fr); height: var(--alto); min-height: 520px; gap: 56px; }
+.prod .ph { height: 100%; width: auto; max-height: none; aspect-ratio: 4 / 5; max-width: 52vw; }
+.prod .txt { position: static; padding-top: 0; gap: 16px; align-content: start; overflow: auto; height: 100%; }
+.prod h1 { margin-top: -0.12em; font-size: clamp(38px, 4.2vw, 56px); }
+.prod .eyebrow { margin-top: -6px; }
+.prod .lead p { font-size: 17px; margin: 0; }
+.info div { padding: 9px 0; }
+.duo { grid-template-columns: 1fr 1fr; }
+.duo .ph { aspect-ratio: 3 / 2; }
+@media (max-width: 900px) {
+  .pnav { padding: 0 20px; grid-template-columns: 1fr 1fr; }
+  .pnav .todos { display: none; }
+  .prod { height: auto; min-height: 0; grid-template-columns: 1fr; }
+  .prod .ph { height: auto; width: 100%; max-width: none; }
+  .prod .txt { height: auto; overflow: visible; }
+  .duo { grid-template-columns: 1fr; }
+}
