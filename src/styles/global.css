@@ -182,7 +182,9 @@ footer { padding: 96px 48px 36px; color: var(--grey); font-size: 14px; }
 .pnav a:last-child { justify-self: end; }
 .prod { --alto: calc(100svh - var(--head) - 48px - 40px); grid-template-columns: 1fr 1fr; height: var(--alto); min-height: 520px; gap: 56px; }
 .prod .ph { height: 100%; width: 100%; max-height: none; aspect-ratio: auto; }
-.prod .txt { position: static; padding-top: 0; gap: 16px; align-content: start; overflow: auto; height: 100%; }
+.prod .txt { position: static; padding-top: 0; gap: 16px; display: flex; flex-direction: column; overflow: auto; height: 100%; }
+.prod .txt .info { margin-top: auto; }
+.prod .txt .lead { margin-bottom: 8px; }
 .prod h1 { margin-top: -0.12em; font-size: clamp(38px, 4.2vw, 56px); }
 .prod .eyebrow { margin-top: -6px; }
 .prod .lead p { font-size: 17px; margin: 0; }
@@ -194,6 +196,7 @@ footer { padding: 96px 48px 36px; color: var(--grey); font-size: 14px; }
   .prod { height: auto; min-height: 0; grid-template-columns: 1fr; }
   .prod .ph { height: auto; width: 100%; max-width: none; }
   .prod .txt { height: auto; overflow: visible; }
+  .prod .txt .info { margin-top: 8px; }
   .duo { grid-template-columns: 1fr; }
 }
 .card p.langs { font-size: 13px; margin-top: 6px; }

@@ -7,7 +7,8 @@ linguagens: "JavaScript · HTML · CSS"
 ficha:
   - { rotulo: problema, valor: Planilha difícil de manter no celular }
   - { rotulo: base, valor: "Mesma arquitetura do vr hub, com login para duas pessoas" }
-  - { rotulo: plataformas, valor: web · Android }
+  - { rotulo: back-end, valor: "API em Cloudflare Pages Functions que lê e grava os dados num repositório privado no GitHub; Worker separado envia o aviso diário de contas" }
+  - { rotulo: plataformas, valor: "web · Android (app instalável, funciona offline)" }
 galeria:
   - { legenda: Contas do mês e vencimentos }
   - { legenda: Cartões com fechamento e parcelas }

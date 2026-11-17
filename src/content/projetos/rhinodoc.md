@@ -3,11 +3,12 @@ nome: RhinoDoc
 tipo: plugin para Rhino 8
 status: em uso
 origem: estúdio victor rodrigues · ferramenta
-linguagens: "[linguagem]"
+linguagens: "Python · HTML, CSS e JavaScript (interface)"
 ficha:
   - { rotulo: problema, valor: Horas de trabalho manual a cada revisão de projeto }
   - { rotulo: regras, valor: Não executa sem camadas e dados do projeto configurados }
   - { rotulo: saídas, valor: PDF · DWG · 3DM · STEP }
+  - { rotulo: código, valor: "Cerca de 10 mil linhas de Python no Rhino 8, com projeção 2D, planificação de chapas, cotas e checagem ortográfica" }
   - { rotulo: plataforma, valor: Rhinoceros 8 }
 galeria:
   - { legenda: "Antes: pranchas desenhadas no espaço do modelo" }
