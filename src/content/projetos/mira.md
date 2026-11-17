@@ -3,6 +3,7 @@ nome: Mira
 tipo: finanças da casa
 status: em uso
 origem: projeto pessoal
+linguagens: "JavaScript · HTML · CSS"
 ficha:
   - { rotulo: problema, valor: Planilha difícil de manter no celular }
   - { rotulo: base, valor: "Mesma arquitetura do vr hub, com login para duas pessoas" }

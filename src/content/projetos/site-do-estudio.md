@@ -3,6 +3,7 @@ nome: site do estúdio
 tipo: Astro · Decap CMS · Netlify
 status: no ar
 origem: estúdio victor rodrigues
+linguagens: "TypeScript · HTML · CSS"
 ficha:
   - { rotulo: endereço, valor: estudiovictorrodrigues.com.br }
   - { rotulo: tecnologias, valor: Astro · Decap CMS }

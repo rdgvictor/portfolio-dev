@@ -25,6 +25,7 @@ const { Content } = await p.render();
       <span class="eyebrow">{d.origem}</span>
       <div class="lead"><Content /></div>
       <dl class="info">
+        {d.linguagens && <div><dt>linguagens</dt><dd>{d.linguagens}</dd></div>}
         {d.ficha.map((f) => <div><dt>{f.rotulo}</dt><dd>{f.valor}</dd></div>)}
         <div><dt>status</dt><dd>{d.status}</dd></div>
       </dl>

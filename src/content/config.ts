@@ -7,6 +7,7 @@ const projetos = defineCollection({
     tipo: z.string(),
     status: z.enum(['em uso', 'no ar', 'uso interno', 'em desenvolvimento', 'em estudo']),
     origem: z.string(),
+    linguagens: z.string().optional(),
     imagemLista: z.string().optional(),
     imagem: z.string().optional(),
     ficha: z.array(z.object({ rotulo: z.string(), valor: z.string() })).default([]),

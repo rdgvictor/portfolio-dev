@@ -27,7 +27,8 @@ collections:
         name: status
         widget: select
         options: ["em uso", "no ar", "uso interno", "em desenvolvimento", "em estudo"]
-      - { label: "Origem (linha pequena acima do título, ex.: projeto pessoal)", name: origem, widget: string }
+      - { label: "Origem (linha pequena abaixo do título, ex.: projeto pessoal)", name: origem, widget: string }
+      - { label: "Linguagens (ex.: JavaScript · HTML · CSS)", name: linguagens, widget: string, required: false }
       - { label: Imagem na lista de projetos, name: imagemLista, widget: image, required: false }
       - { label: Imagem principal da página do projeto, name: imagem, widget: image, required: false }
       - { label: Texto, name: body, widget: markdown, buttons: [bold, italic, link], editor_components: [] }

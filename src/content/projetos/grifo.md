@@ -3,8 +3,10 @@ nome: Grifo
 tipo: app de leitura
 status: em desenvolvimento
 origem: projeto pessoal
+linguagens: "JavaScript · Java (Android)"
 ficha:
-  - { rotulo: build, valor: APK gerado automaticamente pelo repositório }
+  - { rotulo: tecnologias, valor: Vite · Capacitor · Electron · pdf.js }
+  - { rotulo: build, valor: APK gerado pelo GitHub Actions a cada envio }
   - { rotulo: próximo passo, valor: Backup e sincronização pelo Google Drive }
   - { rotulo: plataformas, valor: Android · Windows · web app }
 galeria:

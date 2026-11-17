@@ -3,6 +3,7 @@ nome: Parametrizando Urbanidades
 tipo: Grasshopper
 status: em estudo
 origem: pesquisa · ex-iniciação científica
+linguagens: "Grasshopper (programação visual)"
 ficha:
   - { rotulo: origem, valor: "Iniciação científica, Centro Universitário FAM" }
   - { rotulo: ferramenta, valor: Grasshopper }

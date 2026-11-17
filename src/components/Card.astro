@@ -9,5 +9,6 @@ const d = p.data;
   <Imagem src={d.imagemLista || d.imagem} rotulo={`imagem · ${d.nome}`} />
   <h3>{d.nome}</h3>
   <p>{d.tipo}</p>
+  {d.linguagens && <p class="langs">{d.linguagens}</p>}
   <span class={statusOk(d.status) ? 'st ok' : 'st'}>{d.status}</span>
 </a>

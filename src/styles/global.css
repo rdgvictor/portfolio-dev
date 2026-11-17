@@ -180,8 +180,8 @@ footer { padding: 96px 48px 36px; color: var(--grey); font-size: 14px; }
 .pnav { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 16px; height: 48px; padding: 0 48px; font-size: 15px; color: var(--grey); }
 .pnav a:hover { color: var(--ink); }
 .pnav a:last-child { justify-self: end; }
-.prod { --alto: calc(100svh - var(--head) - 48px - 40px); grid-template-columns: auto minmax(320px, 1fr); height: var(--alto); min-height: 520px; gap: 56px; }
-.prod .ph { height: 100%; width: auto; max-height: none; aspect-ratio: 4 / 5; max-width: 52vw; }
+.prod { --alto: calc(100svh - var(--head) - 48px - 40px); grid-template-columns: 1fr 1fr; height: var(--alto); min-height: 520px; gap: 56px; }
+.prod .ph { height: 100%; width: 100%; max-height: none; aspect-ratio: auto; }
 .prod .txt { position: static; padding-top: 0; gap: 16px; align-content: start; overflow: auto; height: 100%; }
 .prod h1 { margin-top: -0.12em; font-size: clamp(38px, 4.2vw, 56px); }
 .prod .eyebrow { margin-top: -6px; }
@@ -196,3 +196,4 @@ footer { padding: 96px 48px 36px; color: var(--grey); font-size: 14px; }
   .prod .txt { height: auto; overflow: visible; }
   .duo { grid-template-columns: 1fr; }
 }
+.card p.langs { font-size: 13px; margin-top: 6px; }
