@@ -178,6 +178,7 @@ footer { padding: 96px 48px 36px; color: var(--grey); font-size: 14px; }
 
 /* página de projeto: navegação, primeira dobra numa tela só, galeria com imagens iguais */
 .pnav { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 16px; height: 48px; padding: 0 48px; font-size: 15px; color: var(--grey); }
+.pnav a { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pnav a:hover { color: var(--ink); }
 .pnav a:last-child { justify-self: end; }
 .prod { --alto: max(520px, calc(100svh - var(--head) - 48px - 40px)); grid-template-columns: 1fr 1fr; min-height: 0; gap: 56px; align-items: stretch; }
@@ -192,7 +193,7 @@ footer { padding: 96px 48px 36px; color: var(--grey); font-size: 14px; }
 .duo { grid-template-columns: 1fr 1fr; }
 .duo .ph { aspect-ratio: 3 / 2; }
 @media (max-width: 900px) {
-  .pnav { padding: 0 20px; }
+  .pnav { height: auto; padding: 4px 20px 24px; }
   .prod { height: auto; min-height: 0; grid-template-columns: 1fr; }
   .prod .ph { height: auto; width: 100%; max-width: none; aspect-ratio: 4 / 5; position: relative; top: 0; }
   .prod .txt { min-height: 0; }
