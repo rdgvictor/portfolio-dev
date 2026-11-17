@@ -16,7 +16,6 @@ const { Content } = await p.render();
 <Base titulo={d.nome} descricao={`${d.nome} · ${d.tipo}`}>
   <nav class="pnav" aria-label="Navegar entre projetos">
     <a href={`/projetos/${anterior.slug}/`}><span aria-hidden="true">←</span> {anterior.data.nome}</a>
-    <a class="todos" href="/projetos/">todos os projetos</a>
     <a href={`/projetos/${proximo.slug}/`}>{proximo.data.nome} <span aria-hidden="true">→</span></a>
   </nav>
   <div class="prod">
