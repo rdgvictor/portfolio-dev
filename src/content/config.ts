@@ -14,6 +14,12 @@ const projetos = defineCollection({
     galeria: z.array(z.object({ imagem: z.string().optional(), legenda: z.string().optional() })).default([]),
     link: z.string().optional(),
     textoLink: z.string().optional(),
+    codigo: z.object({
+      arquivo: z.string(),
+      linguagem: z.string().default('js'),
+      nota: z.string().optional(),
+      trecho: z.string(),
+    }).optional(),
     calculadora: z.boolean().default(false),
     ordem: z.number().default(99),
   }),

@@ -4,7 +4,7 @@
 <section class="calc" aria-labelledby="calc-t">
   <div>
     <h2 id="calc-t">Em qual fatura cai cada parcela?</h2>
-    <p>Uma das regras do Mira, funcionando aqui: compras feitas a partir do dia de fechamento entram na fatura seguinte, e os centavos que sobram da divisão vão para a primeira parcela.</p>
+    <p>Uma das regras do Mira, funcionando aqui: compras feitas a partir do dia de fechamento entram na fatura seguinte, e os centavos que sobram da divisão ficam na última parcela.</p>
     <form class="fields" id="calc" novalidate>
       <label for="valor">valor da compra (R$)<input id="valor" inputmode="decimal" value="1.249,90" /></label>
       <label for="parcelas">parcelas<input id="parcelas" type="number" min="1" max="24" value="5" /></label>
@@ -33,7 +33,7 @@
     var rows = "";
     for (var i = 0; i < n; i++) {
       var m = (mes + i) % 12, a = ano + Math.floor((mes + i) / 12);
-      rows += "<tr><td>" + String(i + 1).padStart(2, "0") + "/" + String(n).padStart(2, "0") + "</td><td>fatura de " + meses[m] + " " + a + "</td><td>" + brl(base + (i === 0 ? resto : 0)) + "</td></tr>";
+      rows += "<tr><td>" + String(i + 1).padStart(2, "0") + "/" + String(n).padStart(2, "0") + "</td><td>fatura de " + meses[m] + " " + a + "</td><td>" + brl(base + (i === n - 1 ? resto : 0)) + "</td></tr>";
     }
     out.innerHTML = '<div class="wrapt"><table><thead><tr><th>parcela</th><th>fatura</th><th>valor</th></tr></thead><tbody>' + rows + '</tbody></table></div><p class="note">' +
       (prox ? "Comprado no dia " + d.getDate() + ", a partir do fechamento do dia " + fecha + ": começa na fatura seguinte." : "Comprado antes do fechamento do dia " + fecha + ": entra na fatura do mês.") + " Total: " + brl(total) + ".</p>";

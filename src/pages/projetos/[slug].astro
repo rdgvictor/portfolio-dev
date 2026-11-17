@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Imagem from '../../components/Imagem.astro';
 import Calculadora from '../../components/Calculadora.astro';
+import { Code } from 'astro:components';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -33,6 +34,15 @@ const { Content } = await p.render();
     </div>
   </div>
   {d.calculadora && <Calculadora />}
+  {d.codigo && (
+    <section class="code" aria-label="Prévia do código">
+      <h2>Prévia do código</h2>
+      <div class="code-box">
+        <div class="code-head"><span class="arq">{d.codigo.arquivo}</span>{d.codigo.nota && <span>{d.codigo.nota}</span>}</div>
+        <Code code={d.codigo.trecho.replace(/\n+$/, '')} lang={d.codigo.linguagem as any} theme="github-dark" />
+      </div>
+    </section>
+  )}
   {d.galeria.length > 0 && (
     <div class="more">
       <h2>Informações adicionais</h2>

@@ -50,6 +50,16 @@ collections:
           - { label: Legenda, name: legenda, widget: string, required: false }
       - { label: "Link externo (opcional)", name: link, widget: string, required: false }
       - { label: "Texto do botão do link", name: textoLink, widget: string, required: false }
+      - label: Prévia do código
+        name: codigo
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { label: "Arquivo (ex.: functions/api/usuario.js)", name: arquivo, widget: string }
+          - { label: "Linguagem (js, ts, python, csharp, html, css)", name: linguagem, widget: string, default: js }
+          - { label: "Nota (uma frase sobre o trecho)", name: nota, widget: string, required: false }
+          - { label: "Trecho (cole o código; confira se não tem senha, token ou dado de cliente)", name: trecho, widget: code, output_code_only: true, allow_language_selection: false }
       - { label: "Mostrar a calculadora de parcelas (só no Mira)", name: calculadora, widget: boolean, default: false }
       - { label: "Ordem (1 aparece primeiro)", name: ordem, widget: number, value_type: int, default: 99 }
 
