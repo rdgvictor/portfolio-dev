@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import Imagem from '../components/Imagem.astro';
+import sobre from '../data/sobre.json';
+import site from '../data/site.json';
+import { t, linguagens, rota, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = t(lang);
+const en = lang === 'en';
+const cv = en ? site.curriculoEn || site.curriculo : site.curriculo;
+---
+<Base titulo={L.sobre} lang={lang}>
+  <div class="about">
+    <Imagem src={sobre.retrato} rotulo={L.img.retrato} />
+    <div>
+      <h1>{sobre.titulo}</h1>
+      {(en ? sobre.paragrafosEn : sobre.paragrafos).map((p) => <p>{p}</p>)}
+      <div class="acoes">
+        {cv && <a class="btn" href={cv} download>{L.curriculo}</a>}
+        {site.repositorio && <a class="btn btn-linha" href={site.repositorio} target="_blank" rel="noopener">{L.codigoSite}</a>}
+      </div>
+      <div class="block">
+        <h2>{L.estudando}</h2>
+        <div class="rows">{sobre.estudos.map((s) => (
+          <div class={s.link ? 'link' : 'now'}>
+            {s.link ? (s.link.startsWith('/') ? <a href={rota(s.link, lang)}>{en ? s.nomeEn : s.nome} →</a> : <a href={s.link} target="_blank" rel="noopener">{en ? s.nomeEn : s.nome} ↗</a>) : <span>{en ? s.nomeEn : s.nome}</span>}
+            <span>{en ? s.detalheEn : s.detalhe}</span>
+          </div>))}
+        </div>
+      </div>
+      <div class="block">
+        <h2>{L.stack}</h2>
+        <div class="rows">{sobre.stack.map((s) => <div class={s.destaque ? 'now' : undefined}><span>{linguagens(s.nome, lang)}</span><span>{en ? s.detalheEn : s.detalhe}</span></div>)}</div>
+      </div>
+      <div class="block">
+        <h2>{L.trajetoria}</h2>
+        <div class="rows">{sobre.trajetoria.map((s) => <div class={s.destaque ? 'now' : undefined}><span>{en ? s.nomeEn : s.nome}</span><span>{en ? s.periodoEn : s.periodo}</span></div>)}</div>
+      </div>
+    </div>
+  </div>
+</Base>

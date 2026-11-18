@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import Imagem from '../components/Imagem.astro';
+import Card from '../components/Card.astro';
+import home from '../data/home.json';
+import { getCollection } from 'astro:content';
+import { negrito } from '../lib';
+import { t, rota, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = t(lang);
+const en = lang === 'en';
+const projetos = (await getCollection('projetos')).sort((a, b) => a.data.ordem - b.data.ordem);
+const destaque = projetos.filter((p) => p.data.categoria === 'projeto').slice(0, Number(home.quantidadeProjetos) || 3);
+const etiqueta = en ? home.textoEtiquetaEn || home.textoEtiqueta : home.textoEtiqueta;
+---
+<Base lang={lang}>
+  <a class="hero-link" href={rota(home.linkImagem || '/projetos/', lang)} aria-label={L.destaque}>
+    <Imagem class="hero" src={home.imagem} rotulo={L.img.hero}>
+      {home.mostrarEtiqueta && etiqueta && <span class="tag">{etiqueta}</span>}
+    </Imagem>
+  </a>
+  <div class="intro">
+    <h1>{en ? home.tituloEn : home.titulo}</h1>
+    <p set:html={negrito(en ? home.textoEn : home.texto)} />
+  </div>
+  <div class="section-h"><h2>{L.projetos}</h2><a href={rota('/projetos/', lang)} class="muted">{L.verTodos}</a></div>
+  <div class="grid">{destaque.map((p) => <Card p={p} lang={lang} />)}</div>
+</Base>

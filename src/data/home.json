@@ -3,7 +3,10 @@
   "linkImagem": "/projetos/vr-hub/",
   "mostrarEtiqueta": true,
   "textoEtiqueta": "vr hub",
-  "titulo": "Arquiteto e designer de produto em transição para back-end com C# e .NET.",
-  "texto": "Desenvolvo e uso todos os dias **um sistema de gestão, um plugin para Rhino e apps para web e Android**. Começo pelo jeito como as pessoas trabalham, desenho a solução e só então programo.",
-  "quantidadeProjetos": "3"
+  "titulo": "Desenvolvedor back-end júnior, com foco em C# e .NET.",
+  "texto": "Venho da arquitetura e do design de produto. Desenvolvo e uso todos os dias **um sistema de gestão, um plugin para Rhino e apps para web e Android**, começando pelo jeito como as pessoas trabalham.",
+  "quantidadeProjetos": "3",
+  "tituloEn": "Junior back-end developer, focused on C# and .NET.",
+  "textoEn": "I come from architecture and product design. I build and use every day **a management system, a Rhino plugin and apps for web and Android**, starting from how people actually work.",
+  "textoEtiquetaEn": "vr hub"
 }

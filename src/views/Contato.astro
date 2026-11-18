@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import contato from '../data/contato.json';
+import { t, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = t(lang);
+const en = lang === 'en';
+const curto = (u: string) => u.replace(/^https?:\/\/(www\.)?[^/]+/, '');
+const cv = en ? site.curriculoEn || site.curriculo : site.curriculo;
+---
+<Base titulo={L.contato} lang={lang}>
+  <div class="contact">
+    <div>
+      <h1>{en ? contato.tituloEn : contato.titulo}</h1>
+      <p>{en ? contato.textoEn : contato.texto}</p>
+      {cv && <p><a class="btn" href={cv} download>{L.curriculo}</a></p>}
+    </div>
+    <div class="clinks">
+      <button type="button" id="copy" data-email={site.email} data-ok={L.copiado} data-label={L.copiar}><span>{L.email}</span><span>{site.email}</span><span id="copy-l">{L.copiar}</span></button>
+      <a href={site.linkedin} target="_blank" rel="noopener"><span>LinkedIn</span><span>{curto(site.linkedin)}</span><span>{L.abrir}</span></a>
+      <a href={site.github} target="_blank" rel="noopener"><span>GitHub</span><span>{curto(site.github)}</span><span>{L.abrir}</span></a>
+    </div>
+  </div>
+  <script is:inline>
+    (function () {
+      var b = document.getElementById('copy'), l = document.getElementById('copy-l');
+      b.addEventListener('click', function () {
+        var ok = function () { l.textContent = b.dataset.ok; setTimeout(function () { l.textContent = b.dataset.label; }, 2200); };
+        if (navigator.clipboard) navigator.clipboard.writeText(b.dataset.email).then(ok, function () { location.href = 'mailto:' + b.dataset.email; });
+        else location.href = 'mailto:' + b.dataset.email;
+      });
+    })();
+  </script>
+</Base>

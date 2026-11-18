@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import Card from '../components/Card.astro';
+import { getCollection } from 'astro:content';
+import { t, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const L = t(lang);
+const todos = (await getCollection('projetos')).sort((a, b) => a.data.ordem - b.data.ordem);
+const projetos = todos.filter((p) => p.data.categoria === 'projeto');
+const exercicios = todos.filter((p) => p.data.categoria === 'exercicio');
+---
+<Base titulo={L.projetos} lang={lang}>
+  <div class="section-h"><h2>{L.projetos}</h2><span>{L.listaSub(projetos.length)}</span></div>
+  <div class="grid">{projetos.map((p) => <Card p={p} lang={lang} />)}</div>
+  {exercicios.length > 0 && <>
+    <div class="section-h" id="exercicios"><h2>{L.exercicios}</h2><span>{L.exerciciosSub}</span></div>
+    <div class="grid grid-p">{exercicios.map((p) => <Card p={p} lang={lang} />)}</div>
+  </>}
+</Base>

@@ -1,0 +1,150 @@
+---
+// "Rode aqui": executa no navegador o código Go dos exercícios, compilado para WebAssembly (public/wasm/exercicios.wasm).
+// O arquivo só é baixado no primeiro clique. As saídas usam os textos reais dos programas.
+import type { Lang } from '../i18n';
+interface Props { programa: string; lang?: Lang }
+const { programa, lang = 'pt' } = Astro.props;
+const en = lang === 'en';
+const T = en ? {
+  titulo: 'Run it here', nota: 'The Go code from the repository, compiled to WebAssembly and running in your browser.',
+  notaAdapt: 'The program logic from the repository, compiled to WebAssembly. Keyboard reading was turned into functions so the browser can call them.',
+  carregando: 'loading the program (about 2.7 MB)…', falhou: 'Could not load the program in this browser.',
+  tamanho: 'length', gerar: 'Generate password', dicaSenha: 'try less than 8 to see the error handling',
+  numero: 'number', calcular: 'Calculate', dicaFat: 'from 1 to 20',
+  novo: 'New game', palp: 'guess', enviar: 'Guess', dicaJogo: 'a number from 1 to 10, or 0 to give up',
+  nome: 'movie', ano: 'year', preco: 'price', notas: 'ratings (comma separated)', cadastrar: 'Register',
+} : {
+  titulo: 'Rode aqui', nota: 'O código Go do repositório, compilado para WebAssembly e rodando no seu navegador.',
+  notaAdapt: 'A lógica do programa do repositório, compilada para WebAssembly. A leitura do teclado virou funções para o navegador poder chamar.',
+  carregando: 'carregando o programa (cerca de 2,7 MB)…', falhou: 'Não foi possível carregar o programa neste navegador.',
+  tamanho: 'tamanho', gerar: 'Gerar senha', dicaSenha: 'teste menos de 8 para ver o tratamento de erro',
+  numero: 'número', calcular: 'Calcular', dicaFat: 'de 1 a 20',
+  novo: 'Novo jogo', palp: 'palpite', enviar: 'Palpitar', dicaJogo: 'um número de 1 a 10, ou 0 para desistir',
+  nome: 'filme', ano: 'ano', preco: 'preço', notas: 'notas (separadas por vírgula)', cadastrar: 'Cadastrar',
+};
+const adaptado = programa === 'jogo-da-adivinhacao' || programa === 'sistema-de-cadastro';
+---
+<section class="code rodar" aria-labelledby="rodar-t" data-programa={programa}>
+  <h2 id="rodar-t">{T.titulo}</h2>
+  <p class="rodar-nota">{adaptado ? T.notaAdapt : T.nota}</p>
+  <form class="rodar-ctl" id="rodar-form" novalidate>
+    {programa === 'gerador-de-senhas' && <>
+      <label for="r-tam">{T.tamanho} <output id="r-tam-v" for="r-tam">12</output></label>
+      <input id="r-tam" type="range" min="4" max="32" value="12" />
+      <button type="submit" class="btn">{T.gerar}</button>
+      <span class="rodar-dica">{T.dicaSenha}</span>
+    </>}
+    {programa === 'calculadora-de-fatoriais' && <>
+      <label for="r-num">{T.numero}<input id="r-num" type="number" min="1" max="20" value="5" /></label>
+      <button type="submit" class="btn">{T.calcular}</button>
+      <span class="rodar-dica">{T.dicaFat}</span>
+    </>}
+    {programa === 'jogo-da-adivinhacao' && <>
+      <button type="button" class="btn btn-linha" id="r-novo">{T.novo}</button>
+      <label for="r-palp">{T.palp}<input id="r-palp" type="number" min="0" max="10" value="5" /></label>
+      <button type="submit" class="btn" id="r-enviar">{T.enviar}</button>
+      <span class="rodar-dica">{T.dicaJogo}</span>
+    </>}
+    {programa === 'sistema-de-cadastro' && <>
+      <label for="r-nome">{T.nome}<input id="r-nome" type="text" value="Cidade de Deus" /></label>
+      <label for="r-ano">{T.ano}<input id="r-ano" type="number" value="2002" /></label>
+      <label for="r-preco">{T.preco}<input id="r-preco" type="text" inputmode="decimal" value="29.90" /></label>
+      <label for="r-notas">{T.notas}<input id="r-notas" type="text" value="9.5, 8, 9" /></label>
+      <button type="submit" class="btn">{T.cadastrar}</button>
+    </>}
+  </form>
+  <div class="code-box">
+    <div class="code-head"><span class="arq">terminal</span><span>Go · WebAssembly</span></div>
+    <pre class="term-tela" id="r-saida" aria-live="polite"></pre>
+  </div>
+</section>
+<script is:inline define:vars={{ T, programa }}>
+(function () {
+  var sec = document.querySelector('.rodar'), base = sec.dataset.base || '';
+  var out = document.getElementById('r-saida'), form = document.getElementById('rodar-form');
+  var $ = function (id) { return document.getElementById(id); };
+  var pronto = null;
+  function carregar() {
+    if (pronto) return pronto;
+    pronto = new Promise(function (ok, erro) {
+      var sc = document.createElement('script'); sc.src = base + '/wasm/wasm_exec.js';
+      sc.onload = function () {
+        var go = new Go();
+        fetch(base + '/wasm/exercicios.wasm').then(function (r) { return r.arrayBuffer(); })
+          .then(function (b) { return WebAssembly.instantiate(b, go.importObject); })
+          .then(function (res) { go.run(res.instance); ok(); }).catch(erro);
+      };
+      sc.onerror = erro; document.head.appendChild(sc);
+    });
+    return pronto;
+  }
+  // escreve uma linha no terminal; partes entre [[ ]] aparecem como texto digitado
+  function linha(txt) {
+    var s = document.createElement('span'); s.className = 't-out';
+    txt.split(/(\[\[.*?\]\])/).forEach(function (p) {
+      if (!p) return;
+      if (p.slice(0, 2) === '[[') { var i = document.createElement('span'); i.className = 't-in'; i.textContent = p.slice(2, -2); s.appendChild(i); }
+      else s.appendChild(document.createTextNode(p));
+    });
+    out.appendChild(s); out.scrollTop = out.scrollHeight; return s;
+  }
+  function cmd(txt) { var s = document.createElement('span'); s.className = 't-cmd'; var ps = document.createElement('span'); ps.className = 't-ps'; ps.textContent = '$'; s.appendChild(ps); s.appendChild(document.createTextNode(' ' + txt)); out.appendChild(s); }
+  function stamp() { var d = new Date(), p = function (x) { return String(x).padStart(2, '0'); };
+    return d.getFullYear() + '/' + p(d.getMonth() + 1) + '/' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()); }
+  function rodar(fn) {
+    var aviso = window.__goPronto ? null : linha(T.carregando);
+    var botoes = form.querySelectorAll('button'); botoes.forEach(function (b) { b.disabled = true; });
+    carregar().then(function () { window.__goPronto = true; if (aviso) aviso.remove(); fn(); })
+      .catch(function () { if (aviso) aviso.textContent = T.falhou; pronto = null; })
+      .finally(function () { botoes.forEach(function (b) { b.disabled = false; }); if (programa === 'jogo-da-adivinhacao' && fim) $('r-enviar').disabled = true; });
+  }
+  var fim = true;
+  if (programa === 'gerador-de-senhas') {
+    $('r-tam').addEventListener('input', function () { $('r-tam-v').textContent = $('r-tam').value; });
+  }
+  function iniciarJogo() {
+    cmd('go run jogoDaAdivinhacao.go'); window.novoJogo(); fim = false;
+    linha('Jogo da Adivinhação'); linha('Tente advinhar o número entre 1 e 10');
+  }
+  if (programa === 'jogo-da-adivinhacao') {
+    $('r-novo').addEventListener('click', function () { rodar(iniciarJogo); });
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    rodar(function () {
+      if (programa === 'gerador-de-senhas') {
+        var n = parseInt($('r-tam').value, 10); cmd('go run ./cmd -length ' + n);
+        var r = window.gerarSenha(n);
+        if (r.erro) { linha(stamp() + ' ' + r.erro); linha('exit status 1'); } else linha('Senha gerada: ' + r.senha);
+      }
+      if (programa === 'calculadora-de-fatoriais') {
+        var k = Math.max(1, Math.min(20, parseInt($('r-num').value, 10) || 1)); $('r-num').value = k;
+        cmd('go run 1-calculadoraDeFatoriais.go'); linha('Digite o número para o fatorial:'); linha('[[' + k + ']]');
+        linha(window.calcularFatorial(k));
+      }
+      if (programa === 'jogo-da-adivinhacao') {
+        if (fim) iniciarJogo();
+        var g = Math.max(0, Math.min(10, parseInt($('r-palp').value, 10) || 0));
+        var p = window.palpite(g);
+        linha('Digite seu palpite (ou 0 para sair):[[' + g + ']]'); linha(p.msg); fim = p.fim;
+      }
+      if (programa === 'sistema-de-cadastro') {
+        var nome = $('r-nome').value.trim(), ano = parseInt($('r-ano').value, 10) || 0;
+        var preco = parseFloat(String($('r-preco').value).replace(',', '.')) || 0;
+        var notas = $('r-notas').value.split(',').map(function (x) { return parseFloat(x.trim().replace(',', '.')); }).filter(function (x) { return !isNaN(x); });
+        cmd('go run sistemaDeCadastro.go');
+        linha('Bem-vindo ao sistema de filmes!'); linha('Agora iremos cadastrar um filme no sistema.');
+        linha('Digite o nome do filme:'); linha('[[' + nome + ']]');
+        linha('Digite o ano de lançamento do filme:'); linha('[[' + ano + ']]');
+        linha('Digite o preço do filme:'); linha('[[' + $('r-preco').value.trim() + ']]');
+        var r2 = window.cadastrarFilme(nome, ano, preco, notas);
+        linha(r2.resumo);
+        linha('Agora atribua as notas para cálculo da média de avaliações:');
+        linha('Digite quantas avaliações deseja fazer para o filme:'); linha('[[' + notas.length + ']]');
+        notas.forEach(function (x, i) { linha('Digite a nota ' + (i + 1) + ': [[' + x + ']]'); });
+        linha(r2.media);
+      }
+    });
+  });
+})();
+</script>

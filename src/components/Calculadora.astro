@@ -1,15 +1,28 @@
 ---
 // Demonstração de uma regra do Mira: em qual fatura cai cada parcela.
+import type { Lang } from '../i18n';
+interface Props { lang?: Lang }
+const { lang = 'pt' } = Astro.props;
+const en = lang === 'en';
+const X = en ? {
+  titulo: 'Which invoice does each installment land on?',
+  texto: 'One of Mira’s rules, working here: purchases made on or after the closing day go to the next invoice, and the cents left over from the split stay in the last installment.',
+  valor: 'purchase amount (R$)', parcelas: 'installments', data: 'purchase date', fecha: 'closing day',
+} : {
+  titulo: 'Em qual fatura cai cada parcela?',
+  texto: 'Uma das regras do Mira, funcionando aqui: compras feitas a partir do dia de fechamento entram na fatura seguinte, e os centavos que sobram da divisão ficam na última parcela.',
+  valor: 'valor da compra (R$)', parcelas: 'parcelas', data: 'data da compra', fecha: 'dia de fechamento',
+};
 ---
 <section class="calc" aria-labelledby="calc-t">
   <div>
-    <h2 id="calc-t">Em qual fatura cai cada parcela?</h2>
-    <p>Uma das regras do Mira, funcionando aqui: compras feitas a partir do dia de fechamento entram na fatura seguinte, e os centavos que sobram da divisão ficam na última parcela.</p>
-    <form class="fields" id="calc" novalidate>
-      <label for="valor">valor da compra (R$)<input id="valor" inputmode="decimal" value="1.249,90" /></label>
-      <label for="parcelas">parcelas<input id="parcelas" type="number" min="1" max="24" value="5" /></label>
-      <label for="data">data da compra<input id="data" type="date" value="2026-11-26" /></label>
-      <label for="fecha">dia de fechamento<input id="fecha" type="number" min="1" max="28" value="25" /></label>
+    <h2 id="calc-t">{X.titulo}</h2>
+    <p>{X.texto}</p>
+    <form class="fields" id="calc" novalidate data-lang={lang}>
+      <label for="valor">{X.valor}<input id="valor" inputmode="decimal" value="1.249,90" /></label>
+      <label for="parcelas">{X.parcelas}<input id="parcelas" type="number" min="1" max="24" value="5" /></label>
+      <label for="data">{X.data}<input id="data" type="date" value="2026-11-26" /></label>
+      <label for="fecha">{X.fecha}<input id="fecha" type="number" min="1" max="28" value="25" /></label>
     </form>
   </div>
   <div id="out" aria-live="polite"></div>
@@ -17,7 +30,14 @@
 <script is:inline>
 (function () {
   var $ = function (s) { return document.querySelector(s); };
-  var meses = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+  var EN = document.getElementById("calc").dataset.lang === "en";
+  var meses = EN ? ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] : ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+  var W = EN ? { inv: "invoice", col: ["installment", "invoice", "amount"], erro: "Enter an amount greater than zero and a valid date.",
+      depois: function (d, f) { return "Bought on day " + d + ", on or after the closing day " + f + ": starts on the next invoice."; },
+      antes: function (f) { return "Bought before the closing day " + f + ": goes on this month’s invoice."; }, total: "Total" }
+    : { inv: "fatura de", col: ["parcela", "fatura", "valor"], erro: "Preencha um valor maior que zero e uma data válida.",
+      depois: function (d, f) { return "Comprado no dia " + d + ", a partir do fechamento do dia " + f + ": começa na fatura seguinte."; },
+      antes: function (f) { return "Comprado antes do fechamento do dia " + f + ": entra na fatura do mês."; }, total: "Total" };
   var brl = function (c) { return (c / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); };
   function calcular() {
     var out = $("#out");
@@ -26,17 +46,17 @@
     var n = Math.max(1, Math.min(24, parseInt($("#parcelas").value, 10) || 1));
     var fecha = Math.max(1, Math.min(28, parseInt($("#fecha").value, 10) || 1));
     var d = $("#data").value ? new Date($("#data").value + "T12:00:00") : null;
-    if (!isFinite(total) || total <= 0 || !d || isNaN(d)) { out.innerHTML = '<p class="note">Preencha um valor maior que zero e uma data válida.</p>'; return; }
+    if (!isFinite(total) || total <= 0 || !d || isNaN(d)) { out.innerHTML = '<p class="note">' + W.erro + '</p>'; return; }
     var base = Math.floor(total / n), resto = total - base * n;
     var mes = d.getMonth(), ano = d.getFullYear(), prox = d.getDate() >= fecha;
     if (prox) { mes++; if (mes > 11) { mes = 0; ano++; } }
     var rows = "";
     for (var i = 0; i < n; i++) {
       var m = (mes + i) % 12, a = ano + Math.floor((mes + i) / 12);
-      rows += "<tr><td>" + String(i + 1).padStart(2, "0") + "/" + String(n).padStart(2, "0") + "</td><td>fatura de " + meses[m] + " " + a + "</td><td>" + brl(base + (i === n - 1 ? resto : 0)) + "</td></tr>";
+      rows += "<tr><td>" + String(i + 1).padStart(2, "0") + "/" + String(n).padStart(2, "0") + "</td><td>" + W.inv + " " + meses[m] + " " + a + "</td><td>" + brl(base + (i === n - 1 ? resto : 0)) + "</td></tr>";
     }
-    out.innerHTML = '<div class="wrapt"><table><thead><tr><th>parcela</th><th>fatura</th><th>valor</th></tr></thead><tbody>' + rows + '</tbody></table></div><p class="note">' +
-      (prox ? "Comprado no dia " + d.getDate() + ", a partir do fechamento do dia " + fecha + ": começa na fatura seguinte." : "Comprado antes do fechamento do dia " + fecha + ": entra na fatura do mês.") + " Total: " + brl(total) + ".</p>";
+    out.innerHTML = '<div class="wrapt"><table><thead><tr><th>' + W.col[0] + '</th><th>' + W.col[1] + '</th><th>' + W.col[2] + '</th></tr></thead><tbody>' + rows + '</tbody></table></div><p class="note">' +
+      (prox ? W.depois(d.getDate(), fecha) : W.antes(fecha)) + " " + W.total + ": " + brl(total) + ".</p>";
   }
   var f = $("#calc");
   f.addEventListener("input", calcular);

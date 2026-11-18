@@ -1,0 +1,14 @@
+---
+import Projeto from '../../../views/Projeto.astro';
+import { getCollection } from 'astro:content';
+export async function getStaticPaths() {
+  const todos = (await getCollection('projetos')).sort((a, b) => a.data.ordem - b.data.ordem);
+  // anterior e próximo dentro do mesmo grupo (projetos ou exercícios)
+  return todos.map((p) => {
+    const g = todos.filter((x) => x.data.categoria === p.data.categoria), i = g.indexOf(p);
+    return { params: { slug: p.slug }, props: { p, anterior: g[(i - 1 + g.length) % g.length], proximo: g[(i + 1) % g.length] } };
+  });
+}
+const { p, anterior, proximo } = Astro.props;
+---
+<Projeto p={p} anterior={anterior} proximo={proximo} lang="en" />

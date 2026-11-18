@@ -1,0 +1,18 @@
+---
+// Página interna (fora do menu): mostra a biblioteca de ícones das capas.
+import Base from '../layouts/Base.astro';
+import Capa from '../components/Capa.astro';
+import { ICONES } from '../icones';
+---
+<Base titulo="Ícones">
+  <div class="section-h"><h2>Biblioteca de ícones</h2><span>{Object.keys(ICONES).length} ícones · escolha o nome no campo "Ícone da capa" do projeto</span></div>
+  <div class="grid grid-ic">
+    {Object.entries(ICONES).map(([k, v]) => (
+      <div class="card">
+        <Capa nome={v.nome} icone={k} />
+        <h3>{v.nome}</h3>
+        <p class="langs">{k}</p>
+      </div>
+    ))}
+  </div>
+</Base>

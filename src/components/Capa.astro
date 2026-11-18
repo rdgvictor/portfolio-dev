@@ -1,0 +1,11 @@
+---
+// Capa para projetos só de código: um ícone de traço fino da biblioteca (src/icones.ts) e a linguagem.
+import { ICONES } from '../icones';
+interface Props { nome: string; linguagem?: string; icone?: string; grande?: boolean }
+const { nome, linguagem, icone = 'terminal', grande = false } = Astro.props;
+const svg = (ICONES[icone] || ICONES.terminal).svg;
+---
+<div class={`ph capa ${grande ? 'capa-g' : ''}`} role="img" aria-label={`${nome} · ${linguagem || ''}`}>
+  {linguagem && <span class="capa-ling">{linguagem}</span>}
+  <svg class="capa-ic" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={svg} />
+</div>

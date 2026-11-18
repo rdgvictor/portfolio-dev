@@ -1,14 +1,22 @@
 ---
 import Imagem from './Imagem.astro';
+import Capa from './Capa.astro';
+import Tela from './Tela.astro';
 import { statusOk } from '../lib';
-interface Props { p: { slug: string; data: any } }
-const { p } = Astro.props;
+import { t, status, linguagens, rota, type Lang } from '../i18n';
+interface Props { p: { slug: string; data: any }; lang?: Lang }
+const { p, lang = 'pt' } = Astro.props;
 const d = p.data;
+const en = lang === 'en' ? d.en || {} : {};
 ---
-<a class="card" href={`/projetos/${p.slug}/`}>
-  <Imagem src={d.imagemLista || d.imagem} rotulo={`imagem · ${d.nome}`} />
+<a class="card" href={rota(`/projetos/${p.slug}/`, lang)}>
+  {!(d.imagemLista || d.imagem) && d.terminal
+    ? <Tela nome={d.nome} linguagem={d.linguagens} terminal={d.terminal} />
+    : !(d.imagemLista || d.imagem) && d.icone
+    ? <Capa nome={d.nome} linguagem={d.linguagens} icone={d.icone} />
+    : <Imagem src={d.imagemLista || d.imagem} rotulo={`${t(lang).img.lista} · ${d.nome}`} />}
   <h3>{d.nome}</h3>
-  <p>{d.tipo}</p>
-  {d.linguagens && <p class="langs">{d.linguagens}</p>}
-  <span class={statusOk(d.status) ? 'st ok' : 'st'}>{d.status}</span>
+  <p>{en.tipo || d.tipo}</p>
+  {d.linguagens && <p class="langs">{linguagens(d.linguagens, lang)}</p>}
+  <span class={statusOk(d.status) ? 'st ok' : 'st'}>{status(d.status, lang)}</span>
 </a>

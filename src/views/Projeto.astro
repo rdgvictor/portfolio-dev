@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import Imagem from '../components/Imagem.astro';
+import Capa from '../components/Capa.astro';
+import Tela from '../components/Tela.astro';
+import Calculadora from '../components/Calculadora.astro';
+import Executar from '../components/Executar.astro';
+import { Code } from 'astro:components';
+import { t, status, linguagens, rota, type Lang } from '../i18n';
+import { negrito } from '../lib';
+interface Props { p: any; anterior: any; proximo: any; lang: Lang }
+const { p, anterior, proximo, lang } = Astro.props;
+const L = t(lang);
+const d = p.data;
+const en = lang === 'en' ? d.en || {} : null;
+const { Content } = await p.render();
+const ficha = (en && en.ficha) || d.ficha;
+const legendas = d.galeria.map((g: any, i: number) => (en && en.galeria && en.galeria[i]) || g.legenda);
+const nota = d.codigo && ((en && en.codigoNota) || d.codigo.nota);
+const url = (x: any) => rota(`/projetos/${x.slug}/`, lang);
+---
+<Base titulo={d.nome} descricao={`${d.nome} · ${(en && en.tipo) || d.tipo}`} lang={lang}>
+  <nav class="pnav" aria-label={L.navProjetos}>
+    <a href={url(anterior)}><span aria-hidden="true">←</span> {anterior.data.nome}</a>
+    <a href={url(proximo)}>{proximo.data.nome} <span aria-hidden="true">→</span></a>
+  </nav>
+  <div class="prod">
+    {!d.imagem && d.terminal
+      ? <Tela nome={d.nome} linguagem={d.linguagens} terminal={d.terminal} grande />
+      : !d.imagem && d.icone
+      ? <Capa nome={d.nome} linguagem={d.linguagens} icone={d.icone} grande />
+      : <Imagem src={d.imagem} rotulo={`${L.img.principal} · ${d.nome}`} />}
+    <div class="txt">
+      <h1>{d.nome}</h1>
+      <span class="eyebrow">{(en && en.origem) || d.origem}</span>
+      <div class="lead">{en && en.texto ? <p set:html={negrito(en.texto)} /> : <Content />}</div>
+      <div class="acoes">
+        {d.link && <a class="btn" href={d.link} target="_blank" rel="noopener">{(en && en.textoLink) || d.textoLink || L.abrir}</a>}
+        {d.github && <a class="btn btn-linha" href={d.github} target="_blank" rel="noopener">{L.verGithub}</a>}
+      </div>
+      {d.numeros.length > 0 && (
+        <div class="numeros">{d.numeros.map((n: any) => <div><strong>{n.valor}</strong><span>{(en && n.rotuloEn) || n.rotulo}</span></div>)}</div>
+      )}
+      <dl class="info">
+        {d.linguagens && <div><dt>{L.linguagens}</dt><dd>{linguagens(d.linguagens, lang)}</dd></div>}
+        {ficha.map((f: any) => <div><dt>{f.rotulo}</dt><dd>{f.valor}</dd></div>)}
+        <div><dt>{L.status}</dt><dd>{status(d.status, lang)}</dd></div>
+      </dl>
+    </div>
+  </div>
+  {d.calculadora && <Calculadora lang={lang} />}
+  {d.executar && <Executar programa={d.executar} lang={lang} />}
+  {d.diagrama.length > 0 && (
+    <section class="fluxo" aria-label={L.comoFunciona}>
+      <h2>{L.comoFunciona}</h2>
+      <ol>
+        {d.diagrama.map((n: any) => (
+          <li>
+            <strong>{(en && n.tituloEn) || n.titulo}</strong>
+            {(n.detalhe || n.detalheEn) && <span>{(en && n.detalheEn) || n.detalhe}</span>}
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+  {d.terminal && d.imagem && (
+    <section class="code term" aria-label={L.execucao}>
+      <h2>{L.execucao}</h2>
+      <div class="code-box">
+        <div class="code-head"><span class="arq">terminal</span><span>{L.execucaoNota}</span></div>
+        <pre class="term-tela">{d.terminal.split('\n').map((linha: string) =>
+          linha.startsWith('$ ')
+            ? <span class="t-cmd"><span class="t-ps">$</span>{linha.slice(1)}</span>
+            : <span class="t-out">{linha.split(/(\[\[.*?\]\])/).map((pd: string) => pd.startsWith('[[') ? <span class="t-in">{pd.slice(2, -2)}</span> : pd)}</span>
+        )}</pre>
+      </div>
+    </section>
+  )}
+  {d.codigo && (
+    <section class="code" aria-label={L.previaCodigo}>
+      <h2>{L.previaCodigo}</h2>
+      <div class="code-box">
+        <div class="code-head"><span class="arq">{d.codigo.arquivo}</span>{nota && <span>{nota}</span>}</div>
+        <Code code={d.codigo.trecho.replace(/\n+$/, '')} lang={d.codigo.linguagem as any} theme="github-light" />
+      </div>
+    </section>
+  )}
+  {d.galeria.length > 0 && (
+    <div class="more">
+      <h2>{L.infoAdicionais}</h2>
+      <div class="duo">
+        {d.galeria.map((g: any, i: number) => (
+          <figure>
+            <Imagem src={g.imagem} rotulo={`${L.img.tela} ${i + 1} · ${d.nome}`} />
+            {legendas[i] && <figcaption>{legendas[i]}</figcaption>}
+          </figure>
+        ))}
+      </div>
+    </div>
+  )}
+</Base>

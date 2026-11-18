@@ -26,7 +26,7 @@ collections:
       - label: Status
         name: status
         widget: select
-        options: ["em uso", "no ar", "uso interno", "em desenvolvimento", "em estudo"]
+        options: ["em uso", "no ar", "uso interno", "em desenvolvimento", "em estudo", "exercício"]
       - { label: "Origem (linha pequena abaixo do título, ex.: projeto pessoal)", name: origem, widget: string }
       - { label: "Linguagens (ex.: JavaScript · HTML · CSS)", name: linguagens, widget: string, required: false }
       - { label: Imagem na lista de projetos, name: imagemLista, widget: image, required: false }
@@ -60,6 +60,48 @@ collections:
           - { label: "Linguagem (js, ts, python, csharp, html, css)", name: linguagem, widget: string, default: js }
           - { label: "Nota (uma frase sobre o trecho)", name: nota, widget: string, required: false }
           - { label: "Trecho (cole o código; confira se não tem senha, token ou dado de cliente)", name: trecho, widget: code, output_code_only: true, allow_language_selection: false }
+      - label: "Números (ex.: 1.200 pedidos)"
+        name: numeros
+        widget: list
+        required: false
+        summary: "{{fields.valor}} {{fields.rotulo}}"
+        fields:
+          - { label: Valor, name: valor, widget: string }
+          - { label: Rótulo, name: rotulo, widget: string }
+          - { label: "Rótulo (inglês)", name: rotuloEn, widget: string, required: false }
+      - label: "Como funciona por dentro (etapas do caminho dos dados)"
+        name: diagrama
+        widget: list
+        required: false
+        summary: "{{fields.titulo}}"
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: Detalhe, name: detalhe, widget: string, required: false }
+          - { label: "Título (inglês)", name: tituloEn, widget: string, required: false }
+          - { label: "Detalhe (inglês)", name: detalheEn, widget: string, required: false }
+      - { label: "Ícone da capa (só para projetos sem imagem; veja a lista em /icones/)", name: icone, widget: select, required: false, options: ["terminal", "api", "servidor", "banco", "nuvem", "cadeado", "chave", "usuario", "equipe", "pasta", "documento", "lista", "filme", "calendario", "relogio", "grafico", "dinheiro", "carrinho", "calculadora", "dado", "controle", "teste", "git", "engrenagem", "busca", "mensagem", "email", "notificacao", "mapa", "livro", "cubo", "regua", "celular", "janela"] }
+      - { label: "Grupo", name: categoria, widget: select, default: projeto, options: [{ label: "Projeto principal", value: projeto }, { label: "Exercícios e estudos", value: exercicio }] }
+      - { label: "Link do repositório público (mostra o botão Ver no GitHub)", name: github, widget: string, required: false }
+      - label: "English (versão em inglês)"
+        name: en
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { label: Type, name: tipo, widget: string, required: false }
+          - { label: Origin, name: origem, widget: string, required: false }
+          - { label: Text, name: texto, widget: text, required: false }
+          - label: Technical sheet
+            name: ficha
+            widget: list
+            required: false
+            summary: "{{fields.rotulo}}: {{fields.valor}}"
+            fields:
+              - { label: Label, name: rotulo, widget: string }
+              - { label: Value, name: valor, widget: string }
+          - { label: "Image captions (same order)", name: galeria, widget: list, required: false, field: { label: Caption, name: legenda, widget: string } }
+          - { label: "Code preview note", name: codigoNota, widget: string, required: false }
+          - { label: "Link button text", name: textoLink, widget: string, required: false }
       - { label: "Mostrar a calculadora de parcelas (só no Mira)", name: calculadora, widget: boolean, default: false }
       - { label: "Ordem (1 aparece primeiro)", name: ordem, widget: number, value_type: int, default: 99 }
 
@@ -83,6 +125,11 @@ collections:
           - { label: LinkedIn, name: linkedin, widget: string }
           - { label: GitHub, name: github, widget: string }
           - { label: Rodapé, name: copyright, widget: string }
+          - { label: "Rodapé em inglês", name: copyrightEn, widget: string }
+          - { label: "Descrição em inglês", name: descricaoEn, widget: text }
+          - { label: "Currículo em PDF", name: curriculo, widget: file, required: false }
+          - { label: "Currículo em PDF (inglês)", name: curriculoEn, widget: file, required: false }
+          - { label: "Repositório deste site", name: repositorio, widget: string, required: false }
       - name: home
         label: Início
         file: src/data/home.json
@@ -91,8 +138,11 @@ collections:
           - { label: "Link da imagem (ex.: /projetos/vr-hub/)", name: linkImagem, widget: string, required: false }
           - { label: Mostrar etiqueta vertical, name: mostrarEtiqueta, widget: boolean, default: true }
           - { label: Texto da etiqueta, name: textoEtiqueta, widget: string, required: false }
+          - { label: "Texto da etiqueta (inglês)", name: textoEtiquetaEn, widget: string, required: false }
           - { label: Título, name: titulo, widget: text }
           - { label: "Texto (use **palavras** para negrito)", name: texto, widget: text }
+          - { label: "Título (inglês)", name: tituloEn, widget: text }
+          - { label: "Texto (inglês)", name: textoEn, widget: text }
           - label: Quantos projetos aparecem no início
             name: quantidadeProjetos
             widget: select
@@ -104,6 +154,17 @@ collections:
           - { label: Retrato, name: retrato, widget: image, required: false }
           - { label: Título, name: titulo, widget: string }
           - { label: Parágrafos, name: paragrafos, widget: list, field: { label: Parágrafo, name: paragrafo, widget: text } }
+          - { label: "Parágrafos (inglês)", name: paragrafosEn, widget: list, field: { label: Paragraph, name: paragrafo, widget: text } }
+          - label: Estudando agora
+            name: estudos
+            widget: list
+            summary: "{{fields.nome}}"
+            fields:
+              - { label: Nome, name: nome, widget: string }
+              - { label: "Nome (inglês)", name: nomeEn, widget: string }
+              - { label: Detalhe, name: detalhe, widget: string }
+              - { label: "Detalhe (inglês)", name: detalheEn, widget: string }
+              - { label: "Link (GitHub, opcional)", name: link, widget: string, required: false }
           - label: Stack
             name: stack
             widget: list
@@ -111,6 +172,7 @@ collections:
             fields:
               - { label: Nome, name: nome, widget: string }
               - { label: Detalhe, name: detalhe, widget: string }
+              - { label: "Detalhe (inglês)", name: detalheEn, widget: string }
               - { label: Destacar, name: destaque, widget: boolean, default: false }
           - label: Trajetória
             name: trajetoria
@@ -118,7 +180,9 @@ collections:
             summary: "{{fields.periodo}} · {{fields.nome}}"
             fields:
               - { label: Nome, name: nome, widget: string }
+              - { label: "Nome (inglês)", name: nomeEn, widget: string }
               - { label: Período, name: periodo, widget: string }
+              - { label: "Período (inglês)", name: periodoEn, widget: string }
               - { label: Destacar, name: destaque, widget: boolean, default: false }
       - name: contato
         label: Contato
@@ -126,3 +190,5 @@ collections:
         fields:
           - { label: Título, name: titulo, widget: string }
           - { label: Texto, name: texto, widget: text }
+          - { label: "Título (inglês)", name: tituloEn, widget: string }
+          - { label: "Texto (inglês)", name: textoEn, widget: text }

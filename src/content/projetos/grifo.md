@@ -53,6 +53,23 @@ codigo:
       }
       return started ? r : null;
     }
+en:
+  tipo: reading app
+  origem: personal project
+  texto: Reader that opens PDF, EPUB, DOCX, DOC, MOBI, RTF, TXT, Markdown and HTML with the same colored highlights, notes, freehand drawing and a ruler for scanned PDFs. Each person uses it on their own device.
+  ficha:
+  - rotulo: technologies
+    valor: Vite · Capacitor · Electron · pdf.js
+  - rotulo: build
+    valor: APK built by GitHub Actions on every push
+  - rotulo: next step
+    valor: Backup and sync through Google Drive
+  - rotulo: platforms
+    valor: Android · Windows · web app
+  galeria:
+  - Colored highlights and notes in the same file
+  - Notes panel and export
+  codigoNota: 'Anchors by text position: the same highlight works in EPUB, DOCX, Markdown, HTML and TXT'
 ordem: 4
 ---
 Leitor que abre PDF, EPUB, DOCX, DOC, MOBI, RTF, TXT, Markdown e HTML com os mesmos grifos coloridos, notas, desenho à mão e régua para PDF escaneado. Cada pessoa usa no próprio aparelho.

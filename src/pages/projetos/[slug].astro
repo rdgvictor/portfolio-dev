@@ -1,59 +1,14 @@
 ---
-import Base from '../../layouts/Base.astro';
-import Imagem from '../../components/Imagem.astro';
-import Calculadora from '../../components/Calculadora.astro';
-import { Code } from 'astro:components';
+import Projeto from '../../views/Projeto.astro';
 import { getCollection } from 'astro:content';
-
 export async function getStaticPaths() {
   const todos = (await getCollection('projetos')).sort((a, b) => a.data.ordem - b.data.ordem);
-  return todos.map((p, i) => ({ params: { slug: p.slug }, props: {
-    p, anterior: todos[(i - 1 + todos.length) % todos.length], proximo: todos[(i + 1) % todos.length] } }));
+  // anterior e próximo dentro do mesmo grupo (projetos ou exercícios)
+  return todos.map((p) => {
+    const g = todos.filter((x) => x.data.categoria === p.data.categoria), i = g.indexOf(p);
+    return { params: { slug: p.slug }, props: { p, anterior: g[(i - 1 + g.length) % g.length], proximo: g[(i + 1) % g.length] } };
+  });
 }
 const { p, anterior, proximo } = Astro.props;
-const d = p.data;
-const { Content } = await p.render();
 ---
-<Base titulo={d.nome} descricao={`${d.nome} · ${d.tipo}`}>
-  <nav class="pnav" aria-label="Navegar entre projetos">
-    <a href={`/projetos/${anterior.slug}/`}><span aria-hidden="true">←</span> {anterior.data.nome}</a>
-    <a href={`/projetos/${proximo.slug}/`}>{proximo.data.nome} <span aria-hidden="true">→</span></a>
-  </nav>
-  <div class="prod">
-    <Imagem src={d.imagem} rotulo={`captura de tela principal · ${d.nome}`} />
-    <div class="txt">
-      <h1>{d.nome}</h1>
-      <span class="eyebrow">{d.origem}</span>
-      <div class="lead"><Content /></div>
-      {d.link && <a class="btn" href={d.link} target="_blank" rel="noopener">{d.textoLink || 'Abrir'}</a>}
-      <dl class="info">
-        {d.linguagens && <div><dt>linguagens</dt><dd>{d.linguagens}</dd></div>}
-        {d.ficha.map((f) => <div><dt>{f.rotulo}</dt><dd>{f.valor}</dd></div>)}
-        <div><dt>status</dt><dd>{d.status}</dd></div>
-      </dl>
-    </div>
-  </div>
-  {d.calculadora && <Calculadora />}
-  {d.codigo && (
-    <section class="code" aria-label="Prévia do código">
-      <h2>Prévia do código</h2>
-      <div class="code-box">
-        <div class="code-head"><span class="arq">{d.codigo.arquivo}</span>{d.codigo.nota && <span>{d.codigo.nota}</span>}</div>
-        <Code code={d.codigo.trecho.replace(/\n+$/, '')} lang={d.codigo.linguagem as any} theme="github-dark" />
-      </div>
-    </section>
-  )}
-  {d.galeria.length > 0 && (
-    <div class="more">
-      <h2>Informações adicionais</h2>
-      <div class="duo">
-        {d.galeria.map((g, i) => (
-          <figure>
-            <Imagem src={g.imagem} rotulo={`captura de tela ${i + 1} · ${d.nome}`} />
-            {g.legenda && <figcaption>{g.legenda}</figcaption>}
-          </figure>
-        ))}
-      </div>
-    </div>
-  )}
-</Base>
+<Projeto p={p} anterior={anterior} proximo={proximo} lang="pt" />

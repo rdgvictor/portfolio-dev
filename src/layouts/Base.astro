@@ -1,58 +1,78 @@
 ---
 import '../styles/global.css';
 import site from '../data/site.json';
+import { t, rota, outraRota, type Lang } from '../i18n';
 
-interface Props { titulo?: string; descricao?: string; }
-const { titulo, descricao = site.descricao } = Astro.props;
+interface Props { titulo?: string; descricao?: string; lang?: Lang; }
+const { titulo, lang = 'pt' } = Astro.props;
+const L = t(lang);
+const descricao = Astro.props.descricao || (lang === 'en' ? site.descricaoEn : site.descricao);
 const nome = `${site.titulo} · ${site.sufixo}`;
 const pageTitle = titulo ? `${titulo} | ${nome}` : nome;
 const atual = Astro.url.pathname;
-const ativo = (p: string) => (atual.startsWith(p) ? 'page' : undefined);
+const ativo = (p: string) => (atual.startsWith(rota(p, lang)) ? 'page' : undefined);
 const tema = site.tema === 'branco' ? 'branco' : 'azul';
+const outra = outraRota(atual);
 ---
 <!doctype html>
-<html lang="pt-BR" data-tema={tema}>
+<html lang={lang === 'en' ? 'en' : 'pt-BR'} data-tema={tema}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={descricao} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang={lang === 'en' ? 'pt-BR' : 'en'} href={outra} />
     <title>{pageTitle}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <!-- cobre a página desde o primeiro instante, antes do CSS carregar, para não piscar -->
+    <style is:inline>html[data-tema="azul"],html[data-tema="azul"] #tr{background:#0047AB;color:#fff}html[data-tema="branco"],html[data-tema="branco"] #tr{background:#fff;color:#0047AB}#tr.in{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center}#tr.in .linha{display:none}</style>
     <noscript><style>#tr{display:none !important}</style></noscript>
   </head>
   <body>
-    <div id="tr" class="in" aria-hidden="true"><i></i></div>
+    <div id="tr" class="in" aria-hidden="true"><i class="linha"></i></div>
     <header>
-      <a class="logo" href="/" aria-label={`${nome}, início`}><span>{site.titulo}</span><span class="dot" aria-hidden="true"></span><span>{site.sufixo}</span></a>
-      <button class="burger" id="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span></button>
-      <nav class="main" id="menu" aria-label="Páginas">
-        <a href="/projetos/" aria-current={ativo('/projetos')}>Projetos</a>
-        <a href="/sobre/" aria-current={ativo('/sobre')}>Sobre</a>
-        <a href="/contato/" aria-current={ativo('/contato')}>Contato</a>
+      <a class="logo" href={rota('/', lang)} aria-label={`${nome}, ${L.inicio}`}><span>{site.titulo}</span><span class="dot" aria-hidden="true"></span><span>{site.sufixo}</span></a>
+      <button class="burger" id="burger" type="button" aria-label={L.menu} aria-expanded="false" aria-controls="menu"><span></span></button>
+      <nav class="main" id="menu" aria-label={L.paginas}>
+        <a href={rota('/projetos/', lang)} aria-current={ativo('/projetos')}>{L.projetos}</a>
+        <a href={rota('/sobre/', lang)} aria-current={ativo('/sobre')}>{L.sobre}</a>
+        <a href={rota('/contato/', lang)} aria-current={ativo('/contato')}>{L.contato}</a>
+        <a class="idioma" href={outra} hreflang={lang === 'en' ? 'pt-BR' : 'en'} aria-label={L.outroIdiomaRotulo}><span class={lang === 'pt' ? 'on' : undefined}>PT</span> / <span class={lang === 'en' ? 'on' : undefined}>EN</span></a>
       </nav>
     </header>
     <main><slot /></main>
-    <footer>{site.copyright}</footer>
+    <footer>{lang === 'en' ? site.copyrightEn : site.copyright}</footer>
 
     <script is:inline>
       (function () {
         var tr = document.getElementById('tr');
         var reduz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        // entrada: a tela azul/branca some com fade
-        setTimeout(function () { tr.className = ''; }, reduz ? 0 : 520);
+        // entrada: a tela fica coberta até a página terminar de carregar (fontes incluídas) e só então some com fade
+        function revelar() {
+          if (reduz) { tr.className = ''; return; }
+          tr.className = 'saindo';
+          setTimeout(function () { tr.className = ''; }, 320);
+        }
+        function pronto() {
+          var fontes = document.fonts && document.fonts.ready
+            ? Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 1500); })])
+            : Promise.resolve();
+          fontes.then(function () { requestAnimationFrame(function () { requestAnimationFrame(revelar); }); });
+        }
+        if (document.readyState === 'complete') pronto(); else window.addEventListener('load', pronto);
         window.addEventListener('pageshow', function (e) { if (e.persisted) tr.className = ''; });
-        // saída: a linha encolhe até o centro antes de trocar de página
+        // saída: a linha encolhe até o centro e some
         document.addEventListener('click', function (e) {
           var a = e.target.closest && e.target.closest('a');
-          if (!a || reduz || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
+          if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank' || a.hasAttribute('download')) return;
           var url = new URL(a.href, location.href);
           if (url.origin !== location.origin || url.pathname === location.pathname) return;
+          if (reduz) return;
           e.preventDefault();
           tr.className = 'go';
-          setTimeout(function () { location.href = url.href; }, 720);
+          setTimeout(function () { location.href = url.href; }, 520);
         });
         var btn = document.getElementById('burger'), menu = document.getElementById('menu');
         btn.addEventListener('click', function () {

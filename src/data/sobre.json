@@ -6,21 +6,118 @@
     "Agora assumo a transição para o back-end, estudando C# e .NET de forma ampla. Do design levo o hábito de observar como as pessoas usam as coisas antes de decidir o que construir."
   ],
   "stack": [
-    { "nome": "C# e .NET", "detalhe": "em estudo · linguagem principal", "destaque": true },
-    { "nome": "Go", "detalhe": "primeiros estudos", "destaque": false },
-    { "nome": "JavaScript, HTML e CSS", "detalhe": "web e apps", "destaque": false },
-    { "nome": "Git e GitHub", "detalhe": "repositórios privados, build automático", "destaque": false },
-    { "nome": "Cloudflare Pages e Access", "detalhe": "publicação e controle de acesso", "destaque": false },
-    { "nome": "Astro, Decap CMS e Netlify", "detalhe": "sites estáticos", "destaque": false },
-    { "nome": "Rhino 8 e Grasshopper", "detalhe": "plugins e modelagem paramétrica", "destaque": false }
+    {
+      "nome": "C# e .NET",
+      "detalhe": "em estudo · linguagem principal",
+      "destaque": true,
+      "detalheEn": "studying · main language"
+    },
+    {
+      "nome": "Go",
+      "detalhe": "primeiros estudos",
+      "destaque": false,
+      "detalheEn": "first steps"
+    },
+    {
+      "nome": "JavaScript, HTML e CSS",
+      "detalhe": "web e apps",
+      "destaque": false,
+      "detalheEn": "web and apps"
+    },
+    {
+      "nome": "Git e GitHub",
+      "detalhe": "repositórios privados, build automático",
+      "destaque": false,
+      "detalheEn": "private repositories, automated builds"
+    },
+    {
+      "nome": "Cloudflare Pages e Access",
+      "detalhe": "publicação e controle de acesso",
+      "destaque": false,
+      "detalheEn": "hosting and access control"
+    },
+    {
+      "nome": "Astro, Decap CMS e Netlify",
+      "detalhe": "sites estáticos",
+      "destaque": false,
+      "detalheEn": "static sites"
+    },
+    {
+      "nome": "Rhino 8 e Grasshopper",
+      "detalhe": "plugins e modelagem paramétrica",
+      "destaque": false,
+      "detalheEn": "plugins and parametric modeling"
+    }
   ],
   "trajetoria": [
-    { "nome": "Transição para back-end", "periodo": "2026", "destaque": true },
-    { "nome": "Direção criativa e sistemas internos · estúdio victor rodrigues", "periodo": "2023 – atual", "destaque": false },
-    { "nome": "Designer · De La Cruz Design e Niedo Design", "periodo": "2025 – atual", "destaque": false },
-    { "nome": "Arquiteto júnior · TL arquitetura e interiores", "periodo": "2024 – 2025", "destaque": false },
-    { "nome": "Designer de produtos · Estúdio Cris Bertolucci", "periodo": "2024", "destaque": false },
-    { "nome": "Barbosa Supermercados e Tools", "periodo": "2021 – 2024", "destaque": false },
-    { "nome": "Arquitetura e Urbanismo · Centro Universitário FAM", "periodo": "2020 – 2024", "destaque": false }
+    {
+      "nome": "Transição para back-end",
+      "periodo": "2026",
+      "destaque": true,
+      "nomeEn": "Moving into back-end",
+      "periodoEn": "2026"
+    },
+    {
+      "nome": "Direção criativa e sistemas internos · estúdio victor rodrigues",
+      "periodo": "2023 – atual",
+      "destaque": false,
+      "nomeEn": "Creative direction and internal systems · estúdio victor rodrigues",
+      "periodoEn": "2023 – present"
+    },
+    {
+      "nome": "Designer · De La Cruz Design e Niedo Design",
+      "periodo": "2025 – atual",
+      "destaque": false,
+      "nomeEn": "Designer · De La Cruz Design and Niedo Design",
+      "periodoEn": "2025 – present"
+    },
+    {
+      "nome": "Arquiteto júnior · TL arquitetura e interiores",
+      "periodo": "2024 – 2025",
+      "destaque": false,
+      "nomeEn": "Junior architect · TL arquitetura e interiores",
+      "periodoEn": "2024 – 2025"
+    },
+    {
+      "nome": "Designer de produtos · Estúdio Cris Bertolucci",
+      "periodo": "2024",
+      "destaque": false,
+      "nomeEn": "Product designer · Estúdio Cris Bertolucci",
+      "periodoEn": "2024"
+    },
+    {
+      "nome": "Barbosa Supermercados e Tools",
+      "periodo": "2021 – 2024",
+      "destaque": false,
+      "nomeEn": "Barbosa Supermercados and Tools",
+      "periodoEn": "2021 – 2024"
+    },
+    {
+      "nome": "Arquitetura e Urbanismo · Centro Universitário FAM · iniciação científica em modelagem generativa (Grasshopper)",
+      "periodo": "2020 – 2024",
+      "destaque": false,
+      "nomeEn": "Architecture and Urban Planning · Centro Universitário FAM · undergraduate research in generative modeling (Grasshopper)",
+      "periodoEn": "2020 – 2024"
+    }
+  ],
+  "paragrafosEn": [
+    "I am an architect, urban planner and product designer, registered with CAU (the Brazilian architecture council), with award-winning products in Brazil and abroad. I learned to code by building the tools my work needed, and today they run every day at the studio and at home.",
+    "Now I am openly moving into back-end development, studying C# and .NET broadly. From design I bring the habit of watching how people use things before deciding what to build."
+  ],
+  "estudos": [
+    {
+      "nome": "C# e .NET",
+      "nomeEn": "C# and .NET",
+      "detalhe": "[o que está estudando agora]",
+      "detalheEn": "[what you are studying now]",
+      "link": ""
+    },
+    {
+      "nome": "Go · 4 exercícios",
+      "nomeEn": "Go · 4 exercises",
+      "detalhe": "programas de terminal com o código e a execução",
+      "detalheEn": "terminal programs with code and real runs",
+      "link": "/projetos/#exercicios"
+    }
   ]
 }

@@ -136,17 +136,20 @@ nav.main a[aria-current="page"]::after, nav.main a:hover::after { content: ""; p
 /* rodapé: só o copyright, como no site do estúdio */
 footer { padding: 96px 48px 36px; color: var(--grey); font-size: 14px; }
 
-/* transição entre páginas: linha azul que encolhe até o centro e some */
+/* transição entre páginas: a linha atravessa a tela, encolhe até o centro e some */
 #tr { position: fixed; inset: 0; z-index: 50; background: var(--white); display: none; align-items: center; justify-content: center; }
-#tr i { display: block; height: 3px; width: 100vw; background: var(--accent); }
-#tr.go, #tr.in { display: flex; }
-#tr.in { animation: fade .45s ease .05s forwards; }
-#tr.in i { display: none; }
-#tr.go i { animation: shrink .7s cubic-bezier(.7,0,.2,1) forwards; }
-#tr.out { animation: fade .35s ease forwards; }
-@keyframes shrink { to { width: 0; } }
-@keyframes thin { to { height: 0; } }
+#tr.go, #tr.in, #tr.saindo { display: flex; }
+#tr .linha { position: absolute; left: 50%; top: 50%; width: 100vw; height: 3px; background: var(--accent); transform: translate(-50%, -50%); }
+#tr.go .linha { animation: encolhe .5s cubic-bezier(.7,0,.2,1) forwards; }
+#tr.in .linha, #tr.saindo .linha { display: none; }
+#tr.saindo { animation: fade .3s ease forwards; }
+@keyframes encolhe { 0% { width: 100vw; opacity: 1; } 80% { width: 0; opacity: 1; } 100% { width: 0; opacity: 0; } }
 @keyframes fade { to { opacity: 0; } }
+
+/* seletor de idioma */
+nav.main .idioma { color: var(--grey); }
+nav.main .idioma .on { color: var(--ink); }
+nav.main .idioma::after { display: none; }
 
 @media (max-width: 900px) {
   .wrap, header, .intro, .section-h, .grid, .prod, .more, .about, .contact, footer { padding-left: 20px; padding-right: 20px; }
@@ -202,11 +205,95 @@ footer { padding: 96px 48px 36px; color: var(--grey); font-size: 14px; }
 }
 .card p.langs { font-size: 13px; margin-top: 6px; }
 
-/* prévia do código */
+/* prévia do código: fundo branco e código em azul, na linguagem do site */
 .code { margin: 72px 48px 0; }
 .code h2 { font-size: 15px; color: var(--grey); margin-bottom: 18px; }
-.code-box { border-radius: 12px; overflow: hidden; background: #24292e; }
-.code-head { display: flex; justify-content: space-between; gap: 8px 24px; flex-wrap: wrap; padding: 12px 18px; font-size: 13px; color: #9DA7B3; background: #1B1F24; }
-.code-head .arq { color: #E6EDF3; font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
-.code pre { margin: 0; padding: 18px; font-size: 13.5px; line-height: 1.6; max-height: 520px; overflow: auto; }
-@media (max-width: 900px) { .code { margin: 48px 20px 0; } .code pre { font-size: 12.5px; } }
+.code-box { background: #FFFFFF; border: 1px solid #DCE4F2; border-radius: 12px; overflow: hidden; }
+.code-head { display: flex; justify-content: space-between; gap: 8px 24px; flex-wrap: wrap; padding: 14px 20px; font-size: 14px; color: #5B6F94; border-bottom: 1px solid #DCE4F2; }
+.code-head .arq { color: #0047AB; font-weight: 500; }
+.code pre.astro-code { tab-size: 4; margin: 0; padding: 20px; font-size: 13.5px; line-height: 1.65; max-height: 520px; overflow: auto; background: #FFFFFF !important; }
+.code pre.astro-code, .code pre.astro-code span { color: #0047AB !important; }
+@media (max-width: 900px) { .code { margin: 48px 20px 0; } .code pre.astro-code { font-size: 12.5px; padding: 16px; } }
+
+/* botões de ação, estudos com link */
+.acoes { display: flex; flex-wrap: wrap; gap: 10px; }
+.acoes:empty { display: none; }
+.about .acoes { margin: 8px 0 0; }
+.btn-linha { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+.btn-linha:hover { background: var(--accent); color: var(--white); }
+.rows .link a { color: var(--ink); }
+.rows .link a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+
+/* números do projeto */
+.numeros { display: flex; flex-wrap: wrap; gap: 12px 40px; }
+.numeros strong { display: block; font-size: 34px; font-weight: 400; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.numeros span { font-size: 14px; color: var(--grey); }
+
+/* como funciona por dentro: caixas ligadas por setas, na ordem do caminho dos dados */
+.fluxo { margin: 72px 48px 0; }
+.fluxo h2 { font-size: 15px; color: var(--grey); margin-bottom: 18px; }
+.fluxo ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 32px; counter-reset: passo; }
+.fluxo li { position: relative; border: 1px solid var(--rule); border-top: 2px solid var(--accent); padding: 16px 16px 18px; display: grid; gap: 6px; align-content: start; counter-increment: passo; }
+.fluxo li::before { content: counter(passo, decimal-leading-zero); font-size: 13px; color: var(--grey); font-variant-numeric: tabular-nums; }
+.fluxo li strong { font-weight: 500; font-size: 17px; }
+.fluxo li span { font-size: 14px; color: var(--ink2); line-height: 1.45; }
+.fluxo li:not(:last-child)::after { content: "→"; position: absolute; right: -24px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 18px; }
+@media (max-width: 900px) {
+  .fluxo { margin: 48px 20px 0; }
+  .fluxo ol { grid-template-columns: 1fr; gap: 28px; }
+  .fluxo li:not(:last-child)::after { content: "↓"; right: auto; left: 50%; top: auto; bottom: -26px; transform: translateX(-50%); }
+}
+
+/* capa para projetos só de código: ícone de traço fino e a linguagem */
+.capa { aspect-ratio: 4 / 3.4; display: flex; align-items: center; justify-content: center; color: var(--ink); }
+.capa-ling { position: absolute; left: 18px; top: 14px; font-size: 14px; color: var(--grey); }
+.capa-ic { width: 42%; max-width: 140px; height: auto; }
+.prod .capa-g { aspect-ratio: auto; }
+.capa-g .capa-ling { left: 28px; top: 22px; font-size: 18px; }
+.capa-g .capa-ic { width: 30%; max-width: 220px; }
+.grid > * { min-width: 0; }
+.grid-p { grid-template-columns: repeat(4, 1fr); }
+.grid-p .card h3 { font-size: 18px; }
+@media (max-width: 900px) { .grid-p { grid-template-columns: 1fr 1fr; } .prod .capa-g { aspect-ratio: 4 / 5; } }
+
+/* terminal com a execução real */
+.term-tela { tab-size: 4; margin: 0; padding: 20px; font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13.5px; line-height: 1.7; color: #0047AB; white-space: pre-wrap; max-height: 520px; overflow: auto; }
+.term-tela > span { display: block; }
+.t-ps { color: #7F9BD6; margin-right: 6px; }
+.t-cmd { font-weight: 600; }
+.t-in { background: #E3EAF6; border-radius: 4px; padding: 0 4px; font-weight: 600; }
+
+/* página interna da biblioteca de ícones */
+.grid-ic { grid-template-columns: repeat(6, 1fr); }
+.grid-ic .card h3 { font-size: 16px; }
+@media (max-width: 900px) { .grid-ic { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 440px) { .grid-ic { grid-template-columns: 1fr 1fr; } }
+
+/* capa em forma de tela genérica com a execução real */
+.tela { aspect-ratio: 4 / 3.4; display: flex; align-items: center; justify-content: center; padding: 9% 8%; }
+.tela-jan { width: 100%; height: 100%; background: #FFFFFF; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0, 20, 60, .18); }
+.tela-bar { display: flex; align-items: center; gap: 5px; padding: 8px 10px; border-bottom: 1px solid #DCE4F2; font-size: 11px; color: #5B6F94; }
+.tela-bar i { width: 7px; height: 7px; border-radius: 50%; background: #C9D6F0; display: block; }
+.tela-bar span { margin-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tela-txt { margin: 0; padding: 10px 12px; font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 9.5px; line-height: 1.6; color: #0047AB; white-space: pre; overflow: hidden; flex: 1; }
+.tela-txt > span { display: block; }
+.prod .tela-g { aspect-ratio: auto; padding: 8%; }
+.tela-g .tela-bar { padding: 12px 16px; font-size: 13px; gap: 7px; }
+.tela-g .tela-bar i { width: 10px; height: 10px; }
+.tela-g .tela-txt { padding: 18px 20px; font-size: clamp(11px, 1.05vw, 15px); white-space: pre-wrap; }
+@media (max-width: 900px) { .prod .tela-g { aspect-ratio: 4 / 5; padding: 7%; } }
+
+/* rode aqui: programa em WebAssembly */
+.rodar-nota { margin: -8px 0 18px; color: var(--ink2); font-size: 15px; }
+.rodar-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-bottom: 18px; }
+.rodar-ctl label { font-size: 15px; color: var(--grey); display: flex; gap: 8px; align-items: baseline; }
+.rodar-ctl output { color: var(--ink); font-variant-numeric: tabular-nums; min-width: 2ch; }
+.rodar-ctl input[type=range] { accent-color: var(--accent); width: min(260px, 60vw); }
+.rodar-ctl .btn:disabled { opacity: .6; cursor: wait; }
+.rodar-dica { font-size: 13px; color: var(--grey); }
+.rodar .term-tela { min-height: 150px; }
+
+.rodar-ctl label:has(input:not([type=range])) { flex-direction: column; align-items: stretch; gap: 4px; }
+.rodar-ctl input[type=number], .rodar-ctl input[type=text] { font: inherit; font-size: 16px; color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--ink); padding: 4px 0; width: 9em; border-radius: 0; }
+.rodar-ctl input[type=number] { width: 5em; font-variant-numeric: tabular-nums; }
+.rodar-ctl input:focus { outline: none; border-bottom: 2px solid var(--accent); }

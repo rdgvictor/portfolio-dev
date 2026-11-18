@@ -1,0 +1,16 @@
+---
+// Capa em forma de tela genérica: uma janela de terminal com a execução real do programa.
+interface Props { nome: string; linguagem?: string; terminal: string; grande?: boolean }
+const { nome, linguagem, terminal, grande = false } = Astro.props;
+const linhas = terminal.split('\n').slice(0, grande ? 18 : 9);
+---
+<div class={`ph tela ${grande ? 'tela-g' : ''}`} role="img" aria-label={`${nome} · ${linguagem || ''}`}>
+  <div class="tela-jan">
+    <div class="tela-bar"><i></i><i></i><i></i><span>{linguagem ? `${linguagem} · terminal` : 'terminal'}</span></div>
+    <pre class="tela-txt">{linhas.map((l) =>
+      l.startsWith('$ ')
+        ? <span class="t-cmd"><span class="t-ps">$</span>{l.slice(1)}</span>
+        : <span>{l.split(/(\[\[.*?\]\])/).map((p) => p.startsWith('[[') ? <span class="t-in">{p.slice(2, -2)}</span> : p)}</span>
+    )}</pre>
+  </div>
+</div>
